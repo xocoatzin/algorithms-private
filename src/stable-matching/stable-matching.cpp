@@ -94,8 +94,8 @@ int main(int argc, char *argv[])
         // NOTE now 'it' uses dot (.) operator instead of arrow (->)!
         if (beginsWith(it.first, "f")) // if the key starts with 'f'
         {
-            auto &list = it.second; // this is the preference list!
-            auto &name = members.get(it.first); // this is the name of the member
+            auto list = it.second; // this is the preference list!
+            auto name = members.get(it.first); // this is the name of the member
             std::cout << "\nPreferences for " << name << ": " << std::endl;
 
             // We can iterate the preference list in the same way!
@@ -104,7 +104,7 @@ int main(int argc, char *argv[])
             for (auto &option : list)
             {
                 // Do something with the options?
-                auto &option_name = members.get(option); // this is the name of the member
+                auto option_name = members.get(option); // this is the name of the member
                 std::cout << "    " << i++ << ": " << option << ", " << option_name << std::endl;
             }
         }
@@ -112,12 +112,12 @@ int main(int argc, char *argv[])
 
     // Tou can also get the preference of any member by ID
     std::string key = "m1";
-    auto &pref_m1 = preferences.get(key); // preference list
+    auto pref_m1 = preferences.get(key); // preference list
     std::cout << "\nPreferences for " << members.get(key) << ": " << std::endl;
     int i = 0;
     for (auto &option : pref_m1)
     {
-        auto &option_name = members.get(option); // this is the name of the member
+        auto option_name = members.get(option); // this is the name of the member
         std::cout << "    " << i++ << ": " << option_name;
         if (relations.is_single(option)) //is the option single?
             std::cout << " IS SINGLE!!!" << std::endl;

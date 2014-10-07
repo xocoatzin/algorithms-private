@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include <map>
+#include <vector>
 #include <unordered_map>
 #include <functional>
 
@@ -25,12 +26,12 @@ namespace stable_matching
 
         virtual void add(Key key, Type name)
         {
-            table.insert(Table::value_type(key, name));
+            table.insert(typename Table::value_type(key, name));
         };
 
         virtual Type get(Key id)
         {
-            Table::const_iterator it = table.find(id);
+        	iterator it = table.find(id);
             if (it != table.end())
                 return it->second;
             return Type();
@@ -46,10 +47,10 @@ namespace stable_matching
 
         virtual std::size_t size() { return table.size(); }
 
-        template<typename T = TableContainer>
-        T copy_filter(std::function<bool(iterator)> filter)
+        template<typename K = TableContainer>
+        K copy_filter(std::function<bool(iterator)> filter)
         {
-            T t;
+            K t;
             for (iterator it = table.begin(); it != table.end(); it++)
             {
                 if (filter(it))
