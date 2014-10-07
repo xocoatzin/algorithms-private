@@ -31,9 +31,11 @@ From the command line: `git pull`. Remember to commit your changes before pullin
 
 1. From the command line:
 
-    cd build/makefiles/stable-matching/
-    make
-    ./stable-matching ../../../input/stable-matching/input.txt
+```bash
+cd build/makefiles/stable-matching/
+ make
+./stable-matching ../../../input/stable-matching/input.txt
+```
 
 ##About working with Git
 
