@@ -25,12 +25,11 @@ int main(int argc, char *argv[])
     {
         cout << "===================================================\n\nRound " << ++round << endl << endl;
 
-        ID single_guy_id = population.nextSingleMan();
-        Person *single_guy = population.find(single_guy_id);
+        Person *single_guy = population.nextSingleMan();
 
         if (!single_guy)
         {
-            cout << "Person not found! id: " << single_guy_id << endl;
+            cout << "Person not found!" << endl;
             continue;
         }
 

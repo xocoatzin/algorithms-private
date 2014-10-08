@@ -387,22 +387,22 @@ namespace stable_matching
             for (auto &m : women) print(m);
         }
 
-        ID nextSingleMan()
+        Person* nextSingleMan()
         {
-            if (!single_men.size()) return "";
+            if (!single_men.size()) return NULL;
 
             ID id = single_men.top();
             single_men.pop();
-            return id;
+            return find(id);
         }
 
-        ID nextSingleWoman()
+        Person* nextSingleWoman()
         {
-            if (!single_women.size()) return "";
+            if (!single_women.size()) return NULL;
 
             ID id = single_women.top();
             single_women.pop();
-            return id;
+            return find(id);
         }
     };
 
