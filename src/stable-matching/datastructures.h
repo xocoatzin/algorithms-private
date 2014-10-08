@@ -240,13 +240,13 @@ namespace stable_matching
             };
 
         private:
-            Population& _population;
             std::string couple_id;
+            Population& _population;
 
             Person(std::string _id, std::vector<std::string> _preferences, Population& _pop) :
+                all_preferences(_preferences),
                 id(_id),
                 couple_id(""),
-                all_preferences(_preferences),
                 _population(_pop)
             {
                 for (auto &p : _preferences)

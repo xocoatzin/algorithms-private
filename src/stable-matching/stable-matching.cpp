@@ -16,7 +16,9 @@ int main(int argc, char *argv[])
     }
 
     Parser parser(argv[1]);
-    Population population(parser.getMembers(), parser.getPreferences());
+    Preferences preferences = parser.getPreferences();
+    Members members =  parser.getMembers();
+    Population population(members, preferences);
 
     unsigned int round = 0;
     while (population.single_men.size() > 0)
