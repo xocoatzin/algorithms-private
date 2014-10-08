@@ -21,6 +21,10 @@ namespace stable_matching
             IGNORE
         };
 
+        Parser(std::string filename)
+        {
+            parse(filename);
+        }
         void parse(std::string filename)
         {
             std::cout << "Reading [" << filename << "]" << std::endl;
