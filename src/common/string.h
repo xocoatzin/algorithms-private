@@ -1,12 +1,13 @@
 #ifndef TOOLS_STRING_H
 #define TOOLS_STRING_H
 
-#include <algorithm> 
-#include <functional> 
+#include <algorithm>
+#include <functional>
 #include <cctype>
 #include <locale>
 #include <string>
-
+#include <vector>
+#include <sstream>
 
 namespace tools
 {
@@ -53,6 +54,37 @@ namespace tools
             tokens.push_back(trim(str));
 
         return tokens;
+    }
+
+    static inline bool match(std::string str, std::string pattern, unsigned int offset = 0)
+    {
+        unsigned int i = 0;
+        bool _match = true;
+        for (auto &c : pattern)
+        {
+            if (str.at(offset + i++) != c)
+            {
+                _match = false;
+                break;
+            }
+        }
+
+        return _match;
+    }
+
+    static inline std::string repeat(std::string str, unsigned int times = 1)
+    {
+        std::stringstream ss;
+
+        for (unsigned int s = 0; s < times; s++)
+            ss << str;
+
+        return ss.str();
+    }
+
+    static inline std::string spaces(unsigned int times = 1)
+    {
+        return repeat(" ", times);
     }
 }
 
