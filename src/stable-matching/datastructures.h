@@ -12,7 +12,7 @@
 #include <iomanip>
 
 #include "../common/string.h"
-#include "tools.h"
+#include "stable-matching-tools.h"
 
 namespace stable_matching
 {

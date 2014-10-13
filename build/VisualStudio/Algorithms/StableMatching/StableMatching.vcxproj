@@ -75,7 +75,7 @@
     <ClInclude Include="..\..\..\..\src\common\io.h" />
     <ClInclude Include="..\..\..\..\src\common\string.h" />
     <ClInclude Include="..\..\..\..\src\stable-matching\datastructures.h" />
-    <ClInclude Include="..\..\..\..\src\stable-matching\tools.h" />
+    <ClInclude Include="..\..\..\..\src\stable-matching\stable-matching-tools.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
