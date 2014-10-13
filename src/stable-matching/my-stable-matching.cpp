@@ -36,12 +36,6 @@ int main(int argc, char *argv[])
     // 1) Loop trough single men
     // Hints:
     // Get the number of single men remaining with:   population.single_men.size()
-    //
-    // Example:
-    // while (population.single_men.size() > 0)
-    // {
-    //     ...
-    // }
 
     // 2) Get the next single man
     // Hint:
@@ -71,8 +65,17 @@ int main(int argc, char *argv[])
     // Print the preference lists with:   population.print();
     // Wait for the user to press [enter] with:   cin.get();
 
-
-
+    // Example algorithm:
+    // For each single man in the list...
+    //     ** Get the next single man **
+    //     Repeat...
+    //         ** Get the next preference **
+    //         ** Propose that girl **
+    //     ... until someone accepts
+    //     ** Show the results **
+    //     ** Wait for key press **
+    // ... end loop
+    // end
 
     return 0;
 }
