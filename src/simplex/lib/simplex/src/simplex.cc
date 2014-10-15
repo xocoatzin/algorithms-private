@@ -745,30 +745,29 @@ namespace optimization {
 
         has_to_be_fixed = false;
 
-        log();
 
         // Preprocessing
-        std::cout << "Generating problem in standard form ...";
+        //std::cout << "Generating problem in standard form ...";
         standard_form_problem.process_to_standard_form();
-        std::cout << " done." << std::endl;
+        //std::cout << " done." << std::endl;
 
-        if (VERBOSE) standard_form_problem.log();
+        //if (VERBOSE) standard_form_problem.log();
 
         // Generate and solve artificial problem
         {
             // Create copy of standard form problem to create artificial problem
             Simplex artificial_problem = standard_form_problem;
 
-            std::cout << "Generating artificial problem ...";
+            //std::cout << "Generating artificial problem ...";
             artificial_problem.process_to_artificial_problem();
-            std::cout << " done." << std::endl;
+            //std::cout << " done." << std::endl;
 
-            if (VERBOSE) artificial_problem.log();
+            //if (VERBOSE) artificial_problem.log();
 
             // Use artificial problem suggested base to solve it
-            std::cout << "Solving artificial problem ..." << std::endl;
+            //std::cout << "Solving artificial problem ..." << std::endl;
             artificial_problem.solve_with_base(artificial_problem.suggested_base);
-            std::cout << "Done." << std::endl;
+            //std::cout << "Done." << std::endl;
 
             if (artificial_problem.solution_value != 0) {
 
@@ -781,8 +780,8 @@ namespace optimization {
 
                 overconstrained = false;
 
-                if (VERBOSE) std::cout << "Suggested initial base for original problem:";
-                if (VERBOSE) artificial_problem.current_base.log(" ");
+                //if (VERBOSE) std::cout << "Suggested initial base for original problem:";
+                //if (VERBOSE) artificial_problem.current_base.log(" ");
 
                 // If initial base doesn't contain artificial variables
                 // I can just use it, otherwise it may contain an artificial
@@ -813,7 +812,7 @@ namespace optimization {
                         *   (B^-1)_q * A^j != 0
                         */
 
-                    if (VERBOSE) std::cout << "Artificial variable detected in base: " << artificial_variable << std::endl;
+                    //if (VERBOSE) std::cout << "Artificial variable detected in base: " << artificial_variable << std::endl;
                     int q = artificial_problem.current_base.index_of(artificial_variable);
                     Matrix  bi_row_q(1, (int)artificial_problem.current_base.size());
 
@@ -841,7 +840,7 @@ namespace optimization {
                         // Found a j, substitute artificial_value with j
                         standard_form_problem.suggested_base = artificial_problem.current_base;
                         standard_form_problem.suggested_base.substitute(artificial_variable, j);
-                        if (VERBOSE) standard_form_problem.suggested_base.log("Now initial base is");
+                        //if (VERBOSE) standard_form_problem.suggested_base.log("Now initial base is");
 
                     }
                     else {
