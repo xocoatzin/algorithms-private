@@ -44,6 +44,34 @@
 
 #include <vector>
 #include <algorithm>
+#include <unordered_map>
+
+#include "../../common/io.h"
+#include "../../common/string.h"
+
+using namespace tools;
+
+template <class T>
+inline void hash_combine(std::size_t & seed, const T & v)
+{
+    std::hash<T> hasher;
+    seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+}
+
+namespace std
+{
+    template<typename S, typename T> struct hash<pair<S, T>>
+    {
+        inline size_t operator()(const pair<S, T> & v) const
+        {
+            size_t seed = 0;
+            ::hash_combine(seed, v.first);
+            ::hash_combine(seed, v.second);
+            return seed;
+        }
+    };
+}
+
 
 typedef unsigned char uchar;
 
@@ -51,16 +79,38 @@ template <class TWeight = double>
 class TGraph
 {
 public:
-    class Vtx
+    typedef std::pair<int, int> Pair;
+
+    class Vertex
     {
     public:
-        Vtx *next; // initialized and used in maxFlow() only
+        Vertex *next; // initialized and used in maxFlow() only
         int parent;
         int first;
         int ts;
         int distance;
         TWeight weight;
         uchar t;
+        std::string name;
+
+        Vertex() :
+            next(NULL),
+            parent(0),
+            first(0),
+            ts(0),
+            weight(0),
+            t(0)
+        {};
+
+        Vertex(std::string name) :
+            next(NULL),
+            parent(0),
+            first(0),
+            ts(0),
+            weight(0),
+            t(0),
+            name(name)
+        {};
     };
 
     class Edge
@@ -72,7 +122,14 @@ public:
     };
 
 private:
-    std::vector<Vtx>
+    typedef std::unordered_map < std::string, int > VIndex;
+    typedef std::unordered_map < Pair, int > EIndex;
+
+    VIndex
+        index;
+    EIndex
+        edg_index;
+    std::vector<Vertex>
         vertices;
     std::vector<Edge>
         edges;
@@ -80,67 +137,182 @@ private:
         flow;
 
 public:
-    TGraph() :
-        flow(0)
-    {};
+    //TGraph() :
+    //    flow(0)
+    //{};
+    //
+    //TGraph(unsigned int vtxCount, unsigned int edgeCount) :
+    //    TGraph()
+    //{
+    //    vertices.reserve(vtxCount);
+    //    edges.reserve(edgeCount);
+    //};
 
-    TGraph(unsigned int vtxCount, unsigned int edgeCount) :
-        TGraph()
+    TGraph(std::string filename)
     {
-        vertices.reserve(vtxCount);
-        edges.reserve(edgeCount + 2);
+        std::cout << "Reading [" << filename << "]" << std::endl;
+
+        Reader reader(filename);
+
+        std::string line;
+        std::size_t line_id;
+        while (reader.getLine(line, line_id))
+        {
+            std::vector<std::string> tokens = tools::split(line, ",");
+            if (tokens.size() != 2)
+            {
+                std::cout << "ERROR reading line (bad format): " << line_id << std::endl;
+                continue;
+            }
+
+            int weight = 0;
+            try
+            {
+                weight = std::stoi(tokens[1]);
+            }
+            catch (...)
+            {
+                std::cout << "ERROR reading in line (bad format of weight): " << line_id << std::endl;
+                continue;
+            }
+
+            tokens = tools::split(tokens[0], "->");
+
+            if (tokens.size() != 2)
+            {
+                std::cout << "ERROR reading line (you need to include 2 vetices): " << line_id << std::endl;
+                continue;
+            }
+
+            int
+                from = addVertex(tokens[0]),
+                to = addVertex(tokens[1]);
+
+            addEdge(from, to, weight);
+        }
     };
 
     ~TGraph()
     {};
 
-    int addVtx()
+    int addVertex(std::string name)
     {
-        Vtx v;
-        memset(&v, 0, sizeof(Vtx));
-        vertices.push_back(v);
-        return (int)vertices.size() - 1;
+        int id = findVertex(name);
+        if (id < 0)
+        {
+            Vertex v(name);
+            vertices.push_back(v);
+            id = (int)vertices.size() - 1;
+
+            index.insert(VIndex::value_type(name, id));
+        }
+
+        return id;
     };
 
-    void addEdges(int i, int j, TWeight w, TWeight revw)
+    int findVertex(std::string name)
+    {
+        auto &i = index.find(name);
+        if (i != index.end())
+            return i->second;
+        else
+            return -1;
+    }
+
+    Vertex* getVertex(int id)
+    {
+        if (id < 0 || id >= (int)vertices.size())
+            return NULL;
+
+        return &(vertices[id]);
+    }
+
+    Vertex* getVertex(std::string name)
+    {
+        return getVertex(findVertex(name));
+    }
+
+    int countVertex()
+    {
+        return vertices.size();
+    }
+
+    int findEdge(Pair id)
+    {
+        auto &i = edg_index.find(id);
+        if (i != edg_index.end())
+            return i->second;
+        else
+            return -1;
+    }
+
+    int findEdge(int f, int t)
+    {
+        return findEdge(Pair(f, t));
+    }
+
+    int findEdge(std::string f, std::string t)
+    {
+        int
+            fid = findVertex(f),
+            tid = findVertex(t);
+
+        if (fid < 0 || tid < 0) return -1;
+
+        return findEdge(fid, tid);
+    }
+
+    Edge* getEdge(int id)
+    {
+        if (id < 0 || id >= (int)edges.size())
+            return NULL;
+
+        return &(edges[id]);
+    }
+
+    Edge* getEdge(Pair id)
+    {
+        return getEdge(findEdge(id));
+    }
+
+    Edge* getEdge(int f, int t)
+    {
+        return getEdge(findEdge(f, t));
+    }
+
+    Edge* getEdge(std::string f, std::string t)
+    {
+        return getEdge(findEdge(f, t));
+    }
+
+    int countEdges()
+    {
+        return edges.size();
+    }
+
+    void addEdge(int i, int j, TWeight w)
     {
         if (!(i >= 0 && i < (int)vertices.size())) return;
         if (!(j >= 0 && j < (int)vertices.size())) return;
-        if (!(w >= 0 && revw >= 0)) return;
+        if (!(w >= 0)) return;
         if (!(i != j)) return;
 
-        if (!edges.size())
-            edges.resize(2);
+        int id = findEdge(Pair(i, j));
+        if (id < 0)
+        {
+            Edge
+                fromI;
 
-        Edge
-            fromI,
-            toI;
+            fromI.to = j;
+            fromI.next = vertices[i].first;
+            fromI.weight = w;
+            vertices[i].first = (int)edges.size();
+            edges.push_back(fromI);
+            id = (int)edges.size() - 1;
 
-        fromI.to = j;
-        fromI.next = vertices[i].first;
-        fromI.weight = w;
-        vertices[i].first = (int)edges.size();
-        edges.push_back(fromI);
-
-        toI.to = i;
-        toI.next = vertices[j].first;
-        toI.weight = revw;
-        vertices[j].first = (int)edges.size();
-        edges.push_back(toI);
+            edg_index.insert(EIndex::value_type(Pair(i, j), id));
+        }
     };
-
-    //void addTermWeights(int i, TWeight sourceW, TWeight sinkW)
-    //{
-    //    if (!(i >= 0 && i < (int)vertices.size())) return;
-    //
-    //    TWeight dw = vertices[i].weight;
-    //    if (dw > 0)
-    //        sourceW += dw;
-    //    else
-    //        sinkW -= dw;
-    //    flow += (sourceW < sinkW) ? sourceW : sinkW;
-    //    vertices[i].weight = sourceW - sinkW;
-    //};
 
     TWeight maxFlow();
 };
@@ -151,18 +323,18 @@ template <class TWeight>
 TWeight TGraph<TWeight>::maxFlow()
 {
     const int TERMINAL = -1, ORPHAN = -2;
-    Vtx stub, *nilNode = &stub, *first = nilNode, *last = nilNode;
+    Vertex stub, *nilNode = &stub, *first = nilNode, *last = nilNode;
     int curr_ts = 0;
     stub.next = nilNode;
-    Vtx *vtxPtr = &vertices[0];
+    Vertex *vtxPtr = &vertices[0];
     Edge *edgePtr = &edges[0];
 
-    std::vector<Vtx*> orphans;
+    std::vector<Vertex*> orphans;
 
     // initialize the active queue and the graph vertices
     for( int i = 0; i < (int)vertices.size(); i++ )
     {
-        Vtx* v = vtxPtr + i;
+        Vertex* v = vtxPtr + i;
         v->ts = 0;
         if( v->weight != 0 )
         {
@@ -181,7 +353,7 @@ TWeight TGraph<TWeight>::maxFlow()
     // run the search-path -> augment-graph -> restore-trees loop
     for(;;)
     {
-        Vtx* v, *u;
+        Vertex* v, *u;
         int e0 = -1, ei = 0, ej = 0;
         TWeight minWeight, weight;
         uchar vt;
@@ -288,7 +460,7 @@ TWeight TGraph<TWeight>::maxFlow()
         curr_ts++;
         while( !orphans.empty() )
         {
-            Vtx* v2 = orphans.back();
+            Vertex* v2 = orphans.back();
             orphans.pop_back();
 
             int d, mindistance = INT_MAX;

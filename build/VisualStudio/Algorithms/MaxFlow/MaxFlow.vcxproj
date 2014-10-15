@@ -72,6 +72,8 @@
     <ClCompile Include="..\..\..\..\src\max-flow\max-flow.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\src\common\io.h" />
+    <ClInclude Include="..\..\..\..\src\common\string.h" />
     <ClInclude Include="..\..\..\..\src\max-flow\lib\graph.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
