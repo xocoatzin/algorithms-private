@@ -12,24 +12,6 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-
-
-#if 0
-    {
-        Graph::Edge
-            *e1 = graph.getEdge(0),
-            *e2 = graph.getEdge(Graph::Pair(0, 1)),
-            *e2b = graph.getEdge(0, 1),
-            *e3 = graph.getEdge("v1", "v2");
-
-        Graph::Vertex
-            *sink = graph.getVertex("t"),
-            *source = graph.getVertex("s"),
-            *vn = graph.getVertex(0);
-    }
-#endif // 0
-
-
     // We first create the graph
     Graph graph(argv[1]);
     cout << "\nThe graph:\n";
