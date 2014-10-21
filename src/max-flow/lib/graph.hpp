@@ -83,36 +83,17 @@ class TGraph
 {
 public:
     typedef std::pair<int, int> Pair;
-    typedef TWeight Weight;
+    typedef TWeight Capacity;
 
     class Vertex
     {
     public:
-        Vertex *next; // initialized and used in maxFlow() only
-        int parent;
-        int first;
-        int ts;
-        int distance;
-        Weight weight;
-        uchar t;
         std::string name;
 
-        Vertex() :
-            next(NULL),
-            parent(0),
-            first(0),
-            ts(0),
-            weight(0),
-            t(0)
+        Vertex()
         {};
 
         Vertex(std::string name) :
-            next(NULL),
-            parent(0),
-            first(0),
-            ts(0),
-            weight(0),
-            t(0),
             name(name)
         {};
     };
@@ -120,20 +101,26 @@ public:
     class Edge
     {
     public:
+        enum Type
+        {
+            FORWARD,
+            BACKWARD
+        };
+        Type type;
         int to;
-        int next;
+        int from;
         std::string to_name;
         std::string from_name;
-        Weight weight;
+        Capacity weight;
     };
 
     class Path :
         public std::vector < Edge* >
     {
     public:
-        typename Weight findMaxCapacity()
+        typename Capacity findMaxCapacity()
         {
-            Weight c = std::numeric_limits<Weight>::max();
+            Capacity c = std::numeric_limits<Capacity>::max();
             for (auto &k : *this)
             {
                 if (k->weight < c)
@@ -141,6 +128,11 @@ public:
             }
 
             return c;
+        }
+
+        bool isValid()
+        {
+            return size()>0;
         }
 
         void print()
@@ -364,19 +356,39 @@ public:
         int id = findEdge(Pair(i, j));
         if (id < 0)
         {
-            Edge
-                fromI;
+            {
+                Edge
+                    edge;
 
-            fromI.to = j;
-            fromI.next = vertices[i].first;
-            fromI.from_name = i_name;
-            fromI.to_name = j_name;
-            fromI.weight = w;
-            vertices[i].first = (int)edges.size();
-            edges.push_back(fromI);
-            id = (int)edges.size() - 1;
+                edge.to = j;
+                edge.from = i;
+                edge.from_name = i_name;
+                edge.to_name = j_name;
+                edge.weight = w;
+                edge.type = Edge::FORWARD;
+                edges.push_back(edge);
 
-            edg_index.insert(EIndex::value_type(Pair(i, j), id));
+                id = (int)edges.size() - 1;
+
+                edg_index.insert(EIndex::value_type(Pair(i, j), id));
+            }
+
+            {
+                Edge
+                    edge;
+
+                edge.to = i;
+                edge.from = j;
+                edge.from_name = j_name;
+                edge.to_name = i_name;
+                edge.weight = 0;
+                edge.type = Edge::BACKWARD;
+                edges.push_back(edge);
+
+                id = (int)edges.size() - 1;
+
+                edg_index.insert(EIndex::value_type(Pair(j, i), id));
+            }
         }
     };
 
@@ -404,6 +416,10 @@ private:
 
         for (auto &n : nodes)
         {
+            Edge *edg = getEdge(from, n);
+            if (!edg || !edg->weight > 0)
+                continue;
+
             if (n == to)
             {
                 s.push(to);
@@ -456,15 +472,33 @@ public:
         return findPath(findVertex(f), findVertex(t));
     }
 
+    void augment(Path &p, Capacity w)
+    {
+        for (auto &e : p)
+        {
+            e->weight -= w;
+            Edge *edg = getEdge(e->to, e->from);
+            if (edg)
+            {
+                edg->weight += w;
+            }
+        }
+    }
+
     void print()
     {
         for (int i = 0; i < edges.size(); i++)
         {
             auto e = edges.at(i);
+            if (e.type != Edge::FORWARD)
+                continue;
+
+            auto rev = getEdge(e.to, e.from);
+
             std::cout
                 << "(" << e.from_name << ")"
                 << " -> (" << e.to_name << ") : "
-                << e.weight
+                << e.weight << " / " << rev->weight
                 << "\n";
         }
     }
