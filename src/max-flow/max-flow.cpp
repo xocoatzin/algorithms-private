@@ -24,5 +24,17 @@ int main(int argc, char *argv[])
         *source = graph.getVertex("s"),
         *vn = graph.getVertex(0);
 
-    graph.maxFlow();
+    Graph::Path
+        p = graph.findPath("s", "t");
+
+    cout << "\nGraph:\n";
+    graph.print();
+
+    cout << "\nA path:\n";
+    p.print();
+
+    Graph::Weight
+        w = p.findMaxCapacity();
+
+
 }

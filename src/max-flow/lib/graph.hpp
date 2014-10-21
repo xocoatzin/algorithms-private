@@ -45,6 +45,9 @@
 #include <vector>
 #include <algorithm>
 #include <unordered_map>
+#include <stack>
+#include <limits>
+#include <iostream>
 
 #include "../../common/io.h"
 #include "../../common/string.h"
@@ -75,11 +78,12 @@ namespace std
 
 typedef unsigned char uchar;
 
-template <class TWeight = double>
+template <class TWeight = unsigned int>
 class TGraph
 {
 public:
     typedef std::pair<int, int> Pair;
+    typedef TWeight Weight;
 
     class Vertex
     {
@@ -89,7 +93,7 @@ public:
         int first;
         int ts;
         int distance;
-        TWeight weight;
+        Weight weight;
         uchar t;
         std::string name;
 
@@ -118,20 +122,75 @@ public:
     public:
         int to;
         int next;
-        TWeight weight;
+        std::string to_name;
+        std::string from_name;
+        Weight weight;
+    };
+
+    class Path :
+        public std::vector < Edge* >
+    {
+    public:
+        typename Weight findMaxCapacity()
+        {
+            Weight c = std::numeric_limits<Weight>::max();
+            for (auto &k : *this)
+            {
+                if (k->weight < c)
+                    c = k->weight;
+            }
+
+            return c;
+        }
+
+        void print()
+        {
+            for (int i = 0; i < size() && at(i); i++)
+            {
+                if (!i) std::cout << "(" << at(i)->from_name << ")";
+                std::cout << " -> (" << at(i)->to_name << ")";
+            }
+        }
     };
 
 private:
+
+    template <typename INDEX, typename TYPE>
+    class HashVector :
+        public std::unordered_map < INDEX, std::vector<TYPE> >
+    {
+    public:
+        void append(INDEX key, TYPE val)
+        {
+            auto &i = find(key);
+            if (i == end())
+            {
+                std::vector<TYPE> vec;
+                vec.push_back(val);
+                insert(value_type(key, vec));
+            }
+            else
+            {
+                auto &vec = i->second;
+                vec.push_back(val);
+            }
+        }
+    };
+
     typedef std::unordered_map < std::string, int > VIndex;
     typedef std::unordered_map < Pair, int > EIndex;
 
+    typedef HashVector< int, int > ConnectionIndex;
+
+    ConnectionIndex
+        c_index;
     VIndex
         index;
     EIndex
         edg_index;
-    std::vector<Vertex>
+    std::vector < Vertex >
         vertices;
-    std::vector<Edge>
+    std::vector < Edge >
         edges;
     TWeight
         flow;
@@ -188,7 +247,12 @@ public:
                 from = addVertex(tokens[0]),
                 to = addVertex(tokens[1]);
 
-            addEdge(from, to, weight);
+            addEdge(from, tokens[0], to, tokens[1], weight);
+
+            c_index.append(
+                    (from),
+                    (to)
+                );
         }
     };
 
@@ -290,7 +354,7 @@ public:
         return edges.size();
     }
 
-    void addEdge(int i, int j, TWeight w)
+    void addEdge(int i, std::string i_name, int j, std::string j_name, TWeight w)
     {
         if (!(i >= 0 && i < (int)vertices.size())) return;
         if (!(j >= 0 && j < (int)vertices.size())) return;
@@ -305,6 +369,8 @@ public:
 
             fromI.to = j;
             fromI.next = vertices[i].first;
+            fromI.from_name = i_name;
+            fromI.to_name = j_name;
             fromI.weight = w;
             vertices[i].first = (int)edges.size();
             edges.push_back(fromI);
@@ -314,236 +380,98 @@ public:
         }
     };
 
-    TWeight maxFlow();
+private:
+    bool findPath_recursive(
+        int from,
+        int to,
+        std::stack < int > &s,
+        std::unordered_map < int, bool > &seen)
+    {
+        auto i = c_index.find(from);
+        if (i == c_index.end())
+        {
+            return false;
+        }
+
+        auto k = seen.find(from);
+        if (k != seen.end())
+        {
+            return false;
+        }
+        seen.insert(std::unordered_map < int, bool >::value_type(from, true));
+
+        auto &nodes = i->second;
+
+        for (auto &n : nodes)
+        {
+            if (n == to)
+            {
+                s.push(to);
+                return true;
+            }
+            else
+            {
+                if (findPath_recursive(n, to, s, seen))
+                {
+                    s.push(n);
+                    return true;
+                }
+            }
+        }
+
+        k = seen.find(from);
+        seen.erase(k);
+
+        return false;
+    }
+
+public:
+    Path findPath(int from, int to)
+    {
+        std::unordered_map < int, bool >
+            seen;
+        std::stack < int >
+            stack;
+
+        findPath_recursive(from, to, stack, seen);
+
+        Path p;
+
+        int _from = from;
+        while (stack.size() > 0)
+        {
+            int _to = stack.top();
+            stack.pop();
+
+            Graph::Edge *edg = getEdge(_from, _to);
+            p.push_back(edg);
+            _from = _to;
+        }
+
+        return p;
+    }
+
+    Path findPath(std::string f, std::string t)
+    {
+        return findPath(findVertex(f), findVertex(t));
+    }
+
+    void print()
+    {
+        for (int i = 0; i < edges.size(); i++)
+        {
+            auto e = edges.at(i);
+            std::cout
+                << "(" << e.from_name << ")"
+                << " -> (" << e.to_name << ") : "
+                << e.weight
+                << "\n";
+        }
+    }
 };
 
-typedef TGraph<double> Graph;
+typedef TGraph<unsigned int> Graph;
 
-template <class TWeight>
-TWeight TGraph<TWeight>::maxFlow()
-{
-    const int TERMINAL = -1, ORPHAN = -2;
-    Vertex stub, *nilNode = &stub, *first = nilNode, *last = nilNode;
-    int curr_ts = 0;
-    stub.next = nilNode;
-    Vertex *vtxPtr = &vertices[0];
-    Edge *edgePtr = &edges[0];
-
-    std::vector<Vertex*> orphans;
-
-    // initialize the active queue and the graph vertices
-    for( int i = 0; i < (int)vertices.size(); i++ )
-    {
-        Vertex* v = vtxPtr + i;
-        v->ts = 0;
-        if( v->weight != 0 )
-        {
-            last = last->next = v;
-            v->distance = 1;
-            v->parent = TERMINAL;
-            v->t = v->weight < 0;
-        }
-        else
-            v->parent = 0;
-    }
-    first = first->next;
-    last->next = nilNode;
-    nilNode->next = 0;
-
-    // run the search-path -> augment-graph -> restore-trees loop
-    for(;;)
-    {
-        Vertex* v, *u;
-        int e0 = -1, ei = 0, ej = 0;
-        TWeight minWeight, weight;
-        uchar vt;
-
-        // grow S & T search trees, find an edge connecting them
-        while( first != nilNode )
-        {
-            v = first;
-            if( v->parent )
-            {
-                vt = v->t;
-                for( ei = v->first; ei != 0; ei = edgePtr[ei].next )
-                {
-                    if( edgePtr[ei^vt].weight == 0 )
-                        continue;
-                    u = vtxPtr+edgePtr[ei].to;
-                    if( !u->parent )
-                    {
-                        u->t = vt;
-                        u->parent = ei ^ 1;
-                        u->ts = v->ts;
-                        u->distance = v->distance + 1;
-                        if( !u->next )
-                        {
-                            u->next = nilNode;
-                            last = last->next = u;
-                        }
-                        continue;
-                    }
-
-                    if( u->t != vt )
-                    {
-                        e0 = ei ^ vt;
-                        break;
-                    }
-
-                    if( u->distance > v->distance+1 && u->ts <= v->ts )
-                    {
-                        // reassign the parent
-                        u->parent = ei ^ 1;
-                        u->ts = v->ts;
-                        u->distance = v->distance + 1;
-                    }
-                }
-                if( e0 > 0 )
-                    break;
-            }
-            // exclude the vertex from the active list
-            first = first->next;
-            v->next = 0;
-        }
-
-        if( e0 <= 0 )
-            break;
-
-        // find the minimum edge weight along the path
-        minWeight = edgePtr[e0].weight;
-        //assert( minWeight > 0 );
-        // k = 1: source tree, k = 0: destination tree
-        for( int k = 1; k >= 0; k-- )
-        {
-            for( v = vtxPtr+edgePtr[e0^k].to;; v = vtxPtr+edgePtr[ei].to )
-            {
-                if( (ei = v->parent) < 0 )
-                    break;
-                weight = edgePtr[ei^k].weight;
-                minWeight = std::min(minWeight, weight);
-                //assert( minWeight > 0 );
-            }
-            weight = fabs(v->weight);
-            minWeight = std::min(minWeight, weight);
-            //assert( minWeight > 0 );
-        }
-
-        // modify weights of the edges along the path and collect orphans
-        edgePtr[e0].weight -= minWeight;
-        edgePtr[e0^1].weight += minWeight;
-        flow += minWeight;
-
-        // k = 1: source tree, k = 0: destination tree
-        for( int k = 1; k >= 0; k-- )
-        {
-            for( v = vtxPtr+edgePtr[e0^k].to;; v = vtxPtr+edgePtr[ei].to )
-            {
-                if( (ei = v->parent) < 0 )
-                    break;
-                edgePtr[ei^(k^1)].weight += minWeight;
-                if( (edgePtr[ei^k].weight -= minWeight) == 0 )
-                {
-                    orphans.push_back(v);
-                    v->parent = ORPHAN;
-                }
-            }
-
-            v->weight = v->weight + minWeight*(1-k*2);
-            if( v->weight == 0 )
-            {
-               orphans.push_back(v);
-               v->parent = ORPHAN;
-            }
-        }
-
-        // restore the search trees by finding new parents for the orphans
-        curr_ts++;
-        while( !orphans.empty() )
-        {
-            Vertex* v2 = orphans.back();
-            orphans.pop_back();
-
-            int d, mindistance = INT_MAX;
-            e0 = 0;
-            vt = v2->t;
-
-            for( ei = v2->first; ei != 0; ei = edgePtr[ei].next )
-            {
-                if( edgePtr[ei^(vt^1)].weight == 0 )
-                    continue;
-                u = vtxPtr+edgePtr[ei].to;
-                if( u->t != vt || u->parent == 0 )
-                    continue;
-                // compute the distanceance to the tree root
-                for( d = 0;; )
-                {
-                    if( u->ts == curr_ts )
-                    {
-                        d += u->distance;
-                        break;
-                    }
-                    ej = u->parent;
-                    d++;
-                    if( ej < 0 )
-                    {
-                        if( ej == ORPHAN )
-                            d = INT_MAX-1;
-                        else
-                        {
-                            u->ts = curr_ts;
-                            u->distance = 1;
-                        }
-                        break;
-                    }
-                    u = vtxPtr+edgePtr[ej].to;
-                }
-
-                // update the distanceance
-                if( ++d < INT_MAX )
-                {
-                    if( d < mindistance )
-                    {
-                        mindistance = d;
-                        e0 = ei;
-                    }
-                    for( u = vtxPtr+edgePtr[ei].to; u->ts != curr_ts; u = vtxPtr+edgePtr[u->parent].to )
-                    {
-                        u->ts = curr_ts;
-                        u->distance = --d;
-                    }
-                }
-            }
-
-            if( (v2->parent = e0) > 0 )
-            {
-                v2->ts = curr_ts;
-                v2->distance = mindistance;
-                continue;
-            }
-
-            /* no parent is found */
-            v2->ts = 0;
-            for( ei = v2->first; ei != 0; ei = edgePtr[ei].next )
-            {
-                u = vtxPtr+edgePtr[ei].to;
-                ej = u->parent;
-                if( u->t != vt || !ej )
-                    continue;
-                if( edgePtr[ei^(vt^1)].weight && !u->next )
-                {
-                    u->next = nilNode;
-                    last = last->next = u;
-                }
-                if( ej > 0 && vtxPtr+edgePtr[ej].to == v2 )
-                {
-                    orphans.push_back(u);
-                    u->parent = ORPHAN;
-                }
-            }
-        }
-    }
-    return flow;
-}
 
 
 #endif
