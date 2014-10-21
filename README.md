@@ -22,20 +22,23 @@ From the command line: `git pull`. Remember to commit your changes before pullin
 
 ###Compile the code
 
-####Visual Studio:
+####Visual Studio (2013):
 
 1. Open the project in 'build/VisualStudio/Algorithms/Algorithms.sln'
 2. Press [F5] to run.
+ 
+You can get a free copy of VS2013 on http://www.visualstudio.com/en-us/downloads/download-visual-studio-vs#DownloadFamilies_2
 
 ####Linux:
 
-1. From the command line:
+1. From the command line (you'll need a c++11 compatible compiler, GCC 4.7 recommended):
 
 ```bash
 cd build/makefiles/stable-matching/
  make
 ./stable-matching ../../../input/stable-matching/input.txt
 ```
+
 
 ##About working with Git
 

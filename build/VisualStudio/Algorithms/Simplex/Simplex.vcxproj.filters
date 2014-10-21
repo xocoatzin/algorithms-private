@@ -13,10 +13,102 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="lib">
+      <UniqueIdentifier>{01519b01-9292-4c7c-969f-253539153372}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib\pilal">
+      <UniqueIdentifier>{9cc1ee52-ded9-44a9-9307-9712b9d9d94d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib\pilal\include">
+      <UniqueIdentifier>{a000c502-ad03-4ba9-bb50-48176c6edd31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib\pilal\src">
+      <UniqueIdentifier>{458aebfb-03f7-45d5-aacf-b7919f480fea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib\simplex">
+      <UniqueIdentifier>{ddd71f21-3da9-4e36-9767-55cf7664a954}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib\simplex\src">
+      <UniqueIdentifier>{53015726-53c4-4914-82b3-dca8f4a95a72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib\simplex\include">
+      <UniqueIdentifier>{6bcf398e-2ae5-4c95-b3e1-2b92048f5ff2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\src\simplex\simplex.cpp">
+    <ClCompile Include="..\..\..\..\src\simplex\simplex-main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\src\simplex\lib\pilal\src\matrix.cc">
+      <Filter>lib\pilal\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\simplex\lib\simplex\src\columnset.cc">
+      <Filter>lib\simplex\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\simplex\lib\simplex\src\constraint.cc">
+      <Filter>lib\simplex\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\simplex\lib\simplex\src\objectivefunction.cc">
+      <Filter>lib\simplex\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\simplex\lib\simplex\src\simplex.cc">
+      <Filter>lib\simplex\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\src\simplex\lib\simplex\src\variable.cc">
+      <Filter>lib\simplex\src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\src\simplex\lib\pilal\include\divisionbyzeroexception.h">
+      <Filter>lib\pilal\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\simplex\lib\pilal\include\indexoutofboundexception.h">
+      <Filter>lib\pilal\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\simplex\lib\pilal\include\matrix.h">
+      <Filter>lib\pilal\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\simplex\lib\pilal\include\matrixissingularexception.h">
+      <Filter>lib\pilal\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\simplex\lib\pilal\include\matrixnotsquareexception.h">
+      <Filter>lib\pilal\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\simplex\lib\pilal\include\memoryreachedoutexception.h">
+      <Filter>lib\pilal\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\simplex\lib\pilal\include\notavectorexception.h">
+      <Filter>lib\pilal\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\simplex\lib\pilal\include\pilal.h">
+      <Filter>lib\pilal\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\simplex\lib\pilal\include\pilalexceptions.h">
+      <Filter>lib\pilal\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\simplex\lib\pilal\include\sizemismatchexception.h">
+      <Filter>lib\pilal\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\simplex\lib\simplex\include\columnset.h">
+      <Filter>lib\simplex\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\simplex\lib\simplex\include\constraint.h">
+      <Filter>lib\simplex\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\simplex\lib\simplex\include\datamismatchexception.h">
+      <Filter>lib\simplex\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\simplex\lib\simplex\include\objectivefunction.h">
+      <Filter>lib\simplex\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\simplex\lib\simplex\include\simplex.h">
+      <Filter>lib\simplex\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\simplex\lib\simplex\include\simplexexceptions.h">
+      <Filter>lib\simplex\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\src\simplex\lib\simplex\include\variable.h">
+      <Filter>lib\simplex\include</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

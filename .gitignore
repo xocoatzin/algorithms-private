@@ -28,5 +28,8 @@
 *.app
 
 # Visual Studio
+*.sdf
+*.suo
+*.opensdf
 Debug/
 Release/

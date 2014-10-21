@@ -53,6 +53,12 @@ namespace tools
             return false;
         }
     };
+
+    static void wait()
+    {
+        std::cout << "Press [ENTER] to continue..." << std::endl;
+        std::cin.get();
+    }
 }
 
 #endif
