@@ -111,16 +111,16 @@ public:
         int from;
         std::string to_name;
         std::string from_name;
-        Capacity weight;
+        TWeight weight;
     };
 
     class Path :
         public std::vector < Edge* >
     {
     public:
-        typename Capacity findMaxCapacity()
+        TWeight findMaxCapacity()
         {
-            Capacity c = std::numeric_limits<Capacity>::max();
+        	TWeight c = std::numeric_limits<TWeight>::max();
             for (auto &k : *this)
             {
                 if (k->weight < c)
@@ -132,15 +132,15 @@ public:
 
         bool isValid()
         {
-            return size()>0;
+            return this->size() > 0;
         }
 
         void print()
         {
-            for (int i = 0; i < size() && at(i); i++)
+            for (int i = 0; i < this->size() && this->at(i); i++)
             {
-                if (!i) std::cout << "(" << at(i)->from_name << ")";
-                std::cout << " -> (" << at(i)->to_name << ")";
+                if (!i) std::cout << "(" << this->at(i)->from_name << ")";
+                std::cout << " -> (" << this->at(i)->to_name << ")";
             }
         }
     };
@@ -152,14 +152,16 @@ private:
         public std::unordered_map < INDEX, std::vector<TYPE> >
     {
     public:
+        typedef std::unordered_map < INDEX, std::vector<TYPE> > Base;
+
         void append(INDEX key, TYPE val)
         {
-            auto &i = find(key);
-            if (i == end())
+            auto i = this->find(key);
+            if (i == this->end())
             {
                 std::vector<TYPE> vec;
                 vec.push_back(val);
-                insert(value_type(key, vec));
+                this->insert(typename Base::value_type(key, vec));
             }
             else
             {
@@ -268,7 +270,7 @@ public:
 
     int findVertex(std::string name)
     {
-        auto &i = index.find(name);
+        auto i = index.find(name);
         if (i != index.end())
             return i->second;
         else
@@ -295,7 +297,7 @@ public:
 
     int findEdge(Pair id)
     {
-        auto &i = edg_index.find(id);
+        auto i = edg_index.find(id);
         if (i != edg_index.end())
             return i->second;
         else
@@ -459,7 +461,7 @@ public:
             int _to = stack.top();
             stack.pop();
 
-            Graph::Edge *edg = getEdge(_from, _to);
+            Edge *edg = getEdge(_from, _to);
             p.push_back(edg);
             _from = _to;
         }
@@ -472,7 +474,7 @@ public:
         return findPath(findVertex(f), findVertex(t));
     }
 
-    void augment(Path &p, Capacity w)
+    void augment(Path &p, TWeight w)
     {
         for (auto &e : p)
         {

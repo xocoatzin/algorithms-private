@@ -72,8 +72,6 @@ int main(int argc, char *argv[])
             {
                 while (i > 0 && pattern.at(i) != str.at(j))
                 {
-                    unsigned int pos = (j - i + 1);
-
                     print(str, pattern, j - i + 1);
                     cout << endl << endl;
 

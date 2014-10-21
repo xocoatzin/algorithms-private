@@ -55,8 +55,8 @@ int main(int argc, char *argv[])
 
         cout << "\n\n" << endl;
         population.print();
-        cout << "\n\nEnd of round, press [ENTER] to continue...\n" << endl;
-        cin.get();
+        cout << "\n\nEnd of round\n" << endl;
+        tools::wait();
     }
 
     cout << "STOP, Everyone matched!\n" << endl;
