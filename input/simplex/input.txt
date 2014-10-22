@@ -1,20 +1,23 @@
-[METADATA]
-
-name Sample problem
-vars 3
-
-[VARIABLES]
-
- 0   x1  4
--2   x2  inf
--3   x3  232
-
-[CONSTRAINTS]
-
-1 3 4 > 0
-0 0 1 < 1
-1 2 0 < 2
+# SAMPLE RUN:
+# Maximize:
+#                     15 X1 + 17 X2 + 20 X3
+# with conditions:
+#                                X2 -    X3 <= 2
+#                      3 X1 +  3 X2 + 5  X3 <= 15
+#                      3 X1 +  2 X2 +    X3 <= 8
 
 [OBJECTIVE]
 
-maximize 1 3 1
+# maximize / minimize
+maximize
+
+[VARIABLES]
+
+15, 17, 20, 0
+
+[CONSTRAINTS]
+
+ 0,  1, -1,  2
+ 3,  3,  5, 15
+ 3,  2,  1,  8
+

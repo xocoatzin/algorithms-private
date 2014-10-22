@@ -50,6 +50,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\..\src\simplex\lib\pilal\include;$(ProjectDir)..\..\..\..\src\simplex\lib\simplex\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -71,32 +72,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\src\simplex\lib\pilal\src\matrix.cc" />
-    <ClCompile Include="..\..\..\..\src\simplex\lib\simplex\src\columnset.cc" />
-    <ClCompile Include="..\..\..\..\src\simplex\lib\simplex\src\constraint.cc" />
-    <ClCompile Include="..\..\..\..\src\simplex\lib\simplex\src\objectivefunction.cc" />
-    <ClCompile Include="..\..\..\..\src\simplex\lib\simplex\src\simplex.cc" />
-    <ClCompile Include="..\..\..\..\src\simplex\lib\simplex\src\variable.cc" />
     <ClCompile Include="..\..\..\..\src\simplex\simplex-main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\src\simplex\lib\pilal\include\divisionbyzeroexception.h" />
-    <ClInclude Include="..\..\..\..\src\simplex\lib\pilal\include\indexoutofboundexception.h" />
-    <ClInclude Include="..\..\..\..\src\simplex\lib\pilal\include\matrix.h" />
-    <ClInclude Include="..\..\..\..\src\simplex\lib\pilal\include\matrixissingularexception.h" />
-    <ClInclude Include="..\..\..\..\src\simplex\lib\pilal\include\matrixnotsquareexception.h" />
-    <ClInclude Include="..\..\..\..\src\simplex\lib\pilal\include\memoryreachedoutexception.h" />
-    <ClInclude Include="..\..\..\..\src\simplex\lib\pilal\include\notavectorexception.h" />
-    <ClInclude Include="..\..\..\..\src\simplex\lib\pilal\include\pilal.h" />
-    <ClInclude Include="..\..\..\..\src\simplex\lib\pilal\include\pilalexceptions.h" />
-    <ClInclude Include="..\..\..\..\src\simplex\lib\pilal\include\sizemismatchexception.h" />
-    <ClInclude Include="..\..\..\..\src\simplex\lib\simplex\include\columnset.h" />
-    <ClInclude Include="..\..\..\..\src\simplex\lib\simplex\include\constraint.h" />
-    <ClInclude Include="..\..\..\..\src\simplex\lib\simplex\include\datamismatchexception.h" />
-    <ClInclude Include="..\..\..\..\src\simplex\lib\simplex\include\objectivefunction.h" />
-    <ClInclude Include="..\..\..\..\src\simplex\lib\simplex\include\simplex.h" />
-    <ClInclude Include="..\..\..\..\src\simplex\lib\simplex\include\simplexexceptions.h" />
-    <ClInclude Include="..\..\..\..\src\simplex\lib\simplex\include\variable.h" />
+    <ClInclude Include="..\..\..\..\src\common\io.h" />
+    <ClInclude Include="..\..\..\..\src\common\string.h" />
+    <ClInclude Include="..\..\..\..\src\simplex\simplex-tools.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
