@@ -14,13 +14,6 @@
 using namespace tools;
 namespace simplex
 {
-
-    //'*  TS:         SIMPLEX TABLE OF SIZE NC+1 x NV+1        * 
-    //'*  R2:         AUXILIARY VARIABLE FOR INPUTS            * 
-    //'*  XMAX:       STORES GREATER COEFFICIENT OF ECONOMIC FUNCTION.                                *
-    //'*  RAP         STORES SMALLEST RATIO > 0                *
-    //'*  V:          AUXILIARY VARIABLE                       *
-    //'*  P1,P2:      LINE, COLUMN INDEX OF PIVOT              * 
     class Problem
     {
     private:
@@ -186,13 +179,13 @@ namespace simplex
                 if (TS[I][1] < 0.0)
                     error = true;
 
-            isOptimal = false;
+            isOptimal = true;
             if (error)
                 return;
 
             for (J = 2; J <= NV + 1; J++)
                 if (TS[1][J] > 0.0)
-                    isOptimal = true;
+                    isOptimal = false;
         }
 
         void print()
@@ -200,19 +193,23 @@ namespace simplex
             unsigned int
                 NC = NumberOfConstraints(),
                 NV = NumberOfVariables(),
-                ww = 5;
+                ww = 7;
 
-            std::cout << "       |  rhs  |";
+            std::cout << "         |   rhs   |";
             for (unsigned int i = 2; i <= NV + 1; i++)
             {
-                std::cout << "   x" << TS[0][i] << "  |";
+                std::cout
+                    << "    x"
+                    << std::setprecision(0)
+                    << TS[0][i]
+                    << "   |";
             }
-            std::cout << "\n" << repeat("-------+",(NV + 2)) << "\n";
+            std::cout << "\n" << repeat("---------+",(NV + 2)) << "\n";
 
             for (unsigned int j = 1; j <= NC + 1; j++)
             {
                 std::cout
-                    << "    "
+                    << "      "
                     << (j == 1 ? 'z' : 'x')
                     << (j == 1 ? ' ' : (char)('0' + TS[j][0]))
                     << " |";
@@ -223,6 +220,8 @@ namespace simplex
                     std::cout
                         << (pivot ? ">" : " ")
                         << std::setw(ww)
+                        << std::fixed
+                        << std::setprecision(3)
                         << TS[j][i]
                         << (pivot ? "<" : " ")
                         << "|";
@@ -230,7 +229,7 @@ namespace simplex
                 if (j != NC + 1)
                     std::cout << "\n";
             }
-            std::cout << "\n" << repeat("-------+", (NV + 2)) << "\n";
+            std::cout << "\n" << repeat("---------+", (NV + 2)) << "\n";
         }
 
         void result()
