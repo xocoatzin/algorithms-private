@@ -27,55 +27,22 @@ int main(int argc, char *argv[])
     // The algorithm starts here!
     // =================================================================================
 
-    // Notes:
-    // All the information you need is stored in {population}
-    // There is a list of single men you can use in {population.single_men}
-    // You can extract them using {population.nextSingleMan()}, this will make them leave the list
-    // If a girl dumps a man, the man returns to the list of single men automatically.
 
-    // 1) Loop trough single men
-    // Hints:
-    // Get the number of single men remaining with:   population.single_men.size()
-
-    // 2) Get the next single man
-    // Hint:
-    // Use:  Person *single_guy = population.nextSingleMan();
-
-    // 3) Get the next preference of that man
-    // Hints:
-    // Use: Person *girl = single_guy->nextPreference();
-    // Each time you call this function, you'll get the next preference for 
-    // that man, in order
-
-    // 4) Make the man propose
-    // Hints:
-    // Use: Person::Response response = single_guy->propose(girl);
-    // {response} contains the answer of the girl,
-    // If the girl accepts, the response will be:  response == Person::ACCEPT_PROPOSAL
-    //   otherwise:                                response == Person::REJECT_PROPOSAL
-
-    // 5) Repeat until a girl accepts
-    // Hints:
-    // do {
-    //     ** get next preference and propose her**
-    // } while (response == Person::REJECT_PROPOSAL);
-
-    // 6) Show the results
-    // Hints:
-    // Print the preference lists with:   population.print();
-    // Wait for the user to press [enter] with:   cin.get();
+    // All the information you need is stored in data structure {population}
+    // You can retrieve the list of single men: {population.single_men}
 
     // Example algorithm:
-    // For each single man in the list...
-    //     ** Get the next single man **
+    // For each single man in the list... [hint: population.single_men.size()]
+    //     ** Get the next single man ** [hint: Person *single_guy = population.nextSingleMan();]
     //     Repeat...
-    //         ** Get the next preference **
-    //         ** Propose that girl **
-    //     ... until someone accepts
-    //     ** Show the results **
-    //     ** Wait for key press **
+    //         ** Get the next preference ** [hint: Person *girl = single_guy->nextPreference();]
+    //         ** Propose that girl ** [hint: Person::Response response = single_guy->propose(girl);]
+    //     ... until someone accepts [hint: response == Person::ACCEPT_PROPOSAL]
+    //     ** Show the results ** [hint: population.print()]
+    //     ** Wait for key press ** [hint: cin.get()]
     // ... end loop
     // end
+
 
     return 0;
 }
