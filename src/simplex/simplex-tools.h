@@ -46,8 +46,8 @@ namespace simplex
 
         Problem() :
             objective(Objective::VOID),
-            error(false),
             isOptimal(false),
+            error(false),
             P1(0),
             P2(0)
         {};

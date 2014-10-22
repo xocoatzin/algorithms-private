@@ -85,7 +85,7 @@
 '*  3, the builder can make a monthly profit of 76000$). *
 '* ----------------------------------------------------- *
 '* REFERENCE:                                            *
-'* Modèles pratiques de décision Tome 2, By Jean-Pierre  *
+'* Modï¿½les pratiques de dï¿½cision Tome 2, By Jean-Pierre  *
 '* Blanger, PSI Editions, France, 1982.                  *
 '*                                                       *
 '*                C++ Release 1.0 By J-P Moreau, Paris.  *
@@ -117,7 +117,7 @@ int main(int argc, char *argv[])
     }
 
     problem.print();
-    wait();
+    tools::wait();
 
     do
     {
@@ -126,11 +126,11 @@ int main(int argc, char *argv[])
         problem.Optimize();
 
         problem.print();
-        wait();
+        tools::wait();
     } while (!problem.isOptimal);
 
     problem.result();
-    wait();
+    tools::wait();
 
     return 0;
 }

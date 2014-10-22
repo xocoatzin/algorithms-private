@@ -13,7 +13,7 @@ CFLAGS = -Wall -g -std=c++11
 
 # define any directories containing header files other than /usr/include
 #
-INCLUDES = -I../../../src/simplex  -I../../../src/common -I../../../src/simplex/lib/pilal/include -I../../../src/simplex/lib/simplex/include
+INCLUDES = -I../../../src/simplex  -I../../../src/common
 
 # define library paths in addition to /usr/lib
 #   if I wanted to include libraries not in /usr/lib I'd specify
@@ -27,12 +27,6 @@ LIBS = -lstdc++
 
 # define the C source files
 SRCS = ../../../src/simplex/simplex-main.cpp \
-../../../src/simplex/lib/pilal/src/matrix.cc \
-../../../src/simplex/lib/simplex/src/columnset.cc \
-../../../src/simplex/lib/simplex/src/constraint.cc \
-../../../src/simplex/lib/simplex/src/objectivefunction.cc \
-../../../src/simplex/lib/simplex/src/simplex.cc \
-../../../src/simplex/lib/simplex/src/variable.cc 
 
 # define the C object files 
 #
