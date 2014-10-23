@@ -137,7 +137,7 @@ public:
 
         void print()
         {
-            for (int i = 0; i < this->size() && this->at(i); i++)
+            for (unsigned int i = 0; i < this->size() && this->at(i); i++)
             {
                 if (!i) std::cout << "(" << this->at(i)->from_name << ")";
                 std::cout << " -> (" << this->at(i)->to_name << ")";
@@ -419,7 +419,7 @@ private:
         for (auto &n : nodes)
         {
             Edge *edg = getEdge(from, n);
-            if (!edg || !edg->weight > 0)
+            if (!edg || !(edg->weight > 0))
                 continue;
 
             if (n == to)
@@ -489,7 +489,7 @@ public:
 
     void print()
     {
-        for (int i = 0; i < edges.size(); i++)
+        for (unsigned int i = 0; i < edges.size(); i++)
         {
             auto e = edges.at(i);
             if (e.type != Edge::FORWARD)
