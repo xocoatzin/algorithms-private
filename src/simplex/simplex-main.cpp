@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
 
     do
     {
-        cout << "Finding next pivot    > # <" << endl;
+        cout << "Finding next pivot" << endl;
         problem.Pivot();
         cout << "Formulating" << endl;
         problem.Formula();
