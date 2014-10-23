@@ -45,11 +45,11 @@ namespace simplex
             isOptimal; // NOPTIMAL
 
         Problem() :
-            objective(Objective::VOID),
-            isOptimal(false),
-            error(false),
             P1(0),
-            P2(0)
+            P2(0),
+            objective(Objective::VOID),
+            error(false),
+            isOptimal(false)
         {};
 
         void Prepare()
