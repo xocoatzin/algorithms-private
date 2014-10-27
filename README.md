@@ -9,13 +9,14 @@ This work package is a learning platform for students at the University of Brist
 The aim of this learning platform is to enable students to implement the algorithms discussed in the lectures without spending lots of time developing input/output, data structure and validation methods. The platform also enables the students to try these algorithms on different inputs, following the code progress through algorithmic iterations.
 
 The code stubs cover the material taught within the topics:
-1) Stable Matching
-2) String Matching
-3) Max-Flow
-4) Linear Programming (the Simplex method)
 
-The code has been written by Alan Torres, University of Bristol
-Material and teaching is delivered by Dr. Dima Damen, University of Bristol
+1. Stable Matching
+2. String Matching
+3. Max-Flow
+4. Linear Programming (the Simplex method)
+
+The code has been written by Alan Torres, University of Bristol;
+Material and teaching is delivered by Dr. Dima Damen, University of Bristol.
 
 
 ##How to...
