@@ -242,11 +242,6 @@ public:
                 to = addVertex(tokens[1]);
 
             addEdge(from, tokens[0], to, tokens[1], weight);
-
-            c_index.append(
-                    (from),
-                    (to)
-                );
         }
     };
 
@@ -373,6 +368,8 @@ public:
                 id = (int)edges.size() - 1;
 
                 edg_index.insert(EIndex::value_type(Pair(i, j), id));
+
+                c_index.append(edge.from, edge.to);
             }
 
             {
@@ -390,6 +387,7 @@ public:
                 id = (int)edges.size() - 1;
 
                 edg_index.insert(EIndex::value_type(Pair(j, i), id));
+                c_index.append(edge.from, edge.to);
             }
         }
     };
