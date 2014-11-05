@@ -328,7 +328,11 @@ namespace stable_matching
             members(m),
             pref(p)
         {
+#ifdef __GNUC__
             for (typename Members::iterator p = members.begin(); p != members.end(); p++)
+#else
+            for (Members::iterator p = members.begin(); p != members.end(); p++)
+#endif
             {
                 Person prs((*p).first, pref.get((*p).first), *this);
 

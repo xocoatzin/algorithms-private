@@ -3,7 +3,11 @@
 
 #include <vector>
 #include <algorithm>
+#ifdef __GNUC__
 #include <tr1/unordered_map>
+#else
+#include <unordered_map>
+#endif
 #include <stack>
 #include <limits>
 #include <iostream>
